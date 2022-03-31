@@ -1,4 +1,6 @@
 __pycache__/
+.vscode
 
 credentials.json
 token.json
+constants.py

@@ -13,7 +13,7 @@ from update_finance_sheet import update_finance_sheet
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
-def main():
+def main(where, type, description, quantity):
     creds = None
 
     if os.path.exists('token.json'):
@@ -34,10 +34,10 @@ def main():
         service = build('sheets', 'v4', credentials=creds)
         sheet = service.spreadsheets()
 
-        update_finance_sheet(sheet)
+        update_finance_sheet(sheet, where, type, description, quantity)
 
     except HttpError as err:
         print(err)
 
 if __name__ == '__main__':
-    main()
+    main('Inter', 'Gastos Pessoais', 'Pasta de Amendoim', -100)
