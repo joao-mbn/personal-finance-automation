@@ -1,6 +1,11 @@
-__pycache__/
+#IDE Configs
 .vscode
 
+#Server
+__pycache__/
+constants.py
 credentials.json
 token.json
-constants.py
+
+#App
+google-services.json
