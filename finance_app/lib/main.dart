@@ -10,58 +10,132 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Entry/Exits to FP-Sheet'),
+          ),
+          body: const EEForm()),
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        primarySwatch: Colors.blueGrey,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const MyHomePage(title: 'Add Entry/Exit to PF Sheet'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+class EEForm extends StatefulWidget {
+  const EEForm({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  EEFormState createState() {
+    return EEFormState();
+  }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+// Create a corresponding State class.
+// This class holds data related to the form.
+class EEFormState extends State<EEForm> {
+  final _formKey = GlobalKey<FormState>();
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  final operationPlaceController = TextEditingController();
+  final operationTypeController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final quantityController = TextEditingController();
+
+  @override
+  void dispose() {
+    operationPlaceController.dispose();
+    operationTypeController.dispose();
+    descriptionController.dispose();
+    quantityController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DropdownButtonFormField(
+            items: createDropdownMenu(['Ações', 'CDB', 'Inter', 'BB']),
+            onChanged: (value) {
+              operationPlaceController.text = value.toString();
+            },
+            validator: (value) {
+              return mandatory(value);
+            },
+          ),
+          DropdownButtonFormField(
+            items: createDropdownMenu([
+              'Contas',
+              'Gastos Pessoais',
+              'Salário',
+              'Transferência',
+              'Dívidas',
+              'Dividendos',
+              'JSCP'
+            ]),
+            onChanged: (value) {
+              operationTypeController.text = value.toString();
+            },
+          ),
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Descrição',
+              hintText: 'Pasta de Amendoim',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            controller: descriptionController,
+          ),
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Valor R\$',
+              helperText:
+                  'Se for negativo é uma despesa, se for positivo é um recebimento',
+              hintText: '-155,00',
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+            controller: quantityController,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            validator: (value) {
+              return mandatory(value);
+            },
+          ),
+          ElevatedButton(
+            child: const Text('Submit'),
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Processing Data')),
+                );
+                Map<String, String> dataToSend = {
+                  'place': operationPlaceController.text,
+                  'type': operationTypeController.text,
+                  'description': descriptionController.text,
+                  'quantity': quantityController.text,
+                };
+                print(dataToSend);
+              }
+            },
+          ),
+        ],
       ),
     );
   }
+}
+
+mandatory(value) {
+  if (value == null || value.isEmpty) {
+    return 'Este campo é obrigatório';
+  }
+  return null;
+}
+
+List<DropdownMenuItem<Object>>? createDropdownMenu(List<String> options) {
+  return options
+      .map((value) => DropdownMenuItem(
+            value: value,
+            child: Text(value),
+          ))
+      .toList();
 }
