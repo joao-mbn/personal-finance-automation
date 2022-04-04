@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
   runApp(const MyApp());
 }
 
@@ -32,8 +40,6 @@ class EEForm extends StatefulWidget {
   }
 }
 
-// Create a corresponding State class.
-// This class holds data related to the form.
 class EEFormState extends State<EEForm> {
   final _formKey = GlobalKey<FormState>();
 
@@ -69,6 +75,7 @@ class EEFormState extends State<EEForm> {
           ),
           DropdownButtonFormField(
             items: createDropdownMenu([
+              ' ',
               'Contas',
               'Gastos Pessoais',
               'Salário',
@@ -103,7 +110,7 @@ class EEFormState extends State<EEForm> {
           ),
           ElevatedButton(
             child: const Text('Submit'),
-            onPressed: () {
+            onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Processing Data')),
@@ -114,7 +121,14 @@ class EEFormState extends State<EEForm> {
                   'description': descriptionController.text,
                   'quantity': quantityController.text,
                 };
-                print(dataToSend);
+                String response = await sendToSheet(dataToSend);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(response),
+                    backgroundColor:
+                        response == 'Success!' ? Colors.green : Colors.red,
+                  ),
+                );
               }
             },
           ),
@@ -138,4 +152,15 @@ List<DropdownMenuItem<Object>>? createDropdownMenu(List<String> options) {
             child: Text(value),
           ))
       .toList();
+}
+
+Future<String> sendToSheet(Map<String, String> dataToSend) async {
+  HttpsCallable callable =
+      FirebaseFunctions.instance.httpsCallable('addToSheet');
+
+  final resp = await callable.call({
+    'text': dataToSend,
+  });
+
+  return resp.data as String;
 }
