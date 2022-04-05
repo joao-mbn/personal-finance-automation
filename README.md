@@ -1,6 +1,5 @@
 Just exploring Google Sheets API to automate a personal finance sheet.
 
-
 Useful stuff that I know I will forget if I don't write it down:
 
 - Solve dependencies in dart to ensure null safety
