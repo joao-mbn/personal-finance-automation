@@ -1,4 +1,4 @@
-Just exploring Google Sheets API to automate a personal finance sheet.
+A simple app with which I can update a personal finance google sheets from my Android phone.
 
 Useful stuff that I know I will forget if I don't write it down:
 
