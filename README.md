@@ -11,6 +11,7 @@ Useful stuff that I know I will forget if I don't write it down:
         - on 'functions' folder run
             firebase emulators:start --inspect-functions
         - save this configuration on "launch.json", inside ".vscode" folder and run it.
+            '''
             "version": "0.2.0",
             "configurations": [
                 {
@@ -20,6 +21,7 @@ Useful stuff that I know I will forget if I don't write it down:
                     "port": 9229
                 }
             ]
+            '''
             - 9229 is the standard port for the emulator.
 
     - Flutter
@@ -33,4 +35,5 @@ Useful stuff that I know I will forget if I don't write it down:
     firebase deploy --only functions:addToSheet
 
 - Build apk to Distribute app
-    flutter build apk
+    - run 'flutter build apk'
+    - get the apk file on the place suggested on cmd and paste it on Firebase app distribution
