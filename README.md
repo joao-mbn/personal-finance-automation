@@ -6,9 +6,21 @@ Useful stuff that I know I will forget if I don't write it down:
     dart pub upgrade --null-safety
 
 - Running dev environment
+
     - Cloud Function
-        - On a JS debug terminal run:
-            - run 'npm run serve'
+        - on 'functions' folder run
+            firebase emulators:start --inspect-functions
+        - save this configuration on "launch.json", inside ".vscode" folder and run it.
+            "version": "0.2.0",
+            "configurations": [
+                {
+                    "type": "node",
+                    "request": "attach",
+                    "name": "debug",
+                    "port": 9229
+                }
+            ]
+            - 9229 is the standard port for the emulator.
 
     - Flutter
         - Select device on bottom right (configurable in Android Studio)
@@ -20,3 +32,5 @@ Useful stuff that I know I will forget if I don't write it down:
 - Deploy function
     firebase deploy --only functions:addToSheet
 
+- Build apk to Distribute app
+    flutter build apk

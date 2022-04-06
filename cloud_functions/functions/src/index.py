@@ -1,4 +1,4 @@
-# The only reason this file existis is to make token generation when the file is not there,
+# The only reason this file exists is to make token generation when the file is not there,
 # because in node localhost is returning empty response, for some unknown reason.
 
 import os.path

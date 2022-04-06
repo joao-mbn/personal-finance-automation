@@ -1,7 +1,7 @@
 const fs = require('fs');
 const readline = require('readline');
 const { google } = require('googleapis');
-const { SPREADSHEET_ID, SHEET_NAME } = require('./constants');
+const { SPREADSHEET_ID } = require('./constants');
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const TOKEN_PATH = 'token.json';
@@ -68,8 +68,9 @@ function getNewToken(oAuth2Client, callback) {
 function appendToSheet(auth, data) {
 
     const sheets = google.sheets({ version: 'v4', auth: auth });
+    const sheetName = currentMonthAndYear();
     const { place, type, description, quantity } = data;
-    const range = `${SHEET_NAME}!${quantity > 0 ? 'G3' : 'L3'}`;
+    const range = `${sheetName}!${quantity > 0 ? 'G3' : 'L3'}`;
     const body = {
         values: [[place, type, description, Math.abs(quantity)]],
         majorDimension: 'ROWS'
@@ -88,4 +89,11 @@ function appendToSheet(auth, data) {
         }
     });
 
+}
+
+function currentMonthAndYear() {
+    const date = new Date();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear().toString().substring(2, 4);
+    return `0${month}/${year}`;
 }

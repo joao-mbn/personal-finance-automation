@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
           ),
           body: const EEForm()),
       theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
+        primarySwatch: Colors.teal,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
     );
@@ -61,78 +61,80 @@ class EEFormState extends State<EEForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DropdownButtonFormField(
-            items: createDropdownMenu(['Ações', 'CDB', 'Inter', 'BB']),
-            onChanged: (value) {
-              operationPlaceController.text = value.toString();
-            },
-            validator: (value) {
-              return mandatory(value);
-            },
-          ),
-          DropdownButtonFormField(
-            items: createDropdownMenu([
-              ' ',
-              'Contas',
-              'Gastos Pessoais',
-              'Salário',
-              'Transferência',
-              'Dívidas',
-              'Dividendos',
-              'JSCP'
-            ]),
-            onChanged: (value) {
-              operationTypeController.text = value.toString();
-            },
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Descrição',
-              hintText: 'Pasta de Amendoim',
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DropdownButtonFormField(
+              items: createDropdownMenu(['Ações', 'CDB', 'Inter', 'BB']),
+              hint: const Text('Lugar'),
+              onChanged: (value) {
+                operationPlaceController.text = value.toString();
+              },
+              validator: (value) {
+                return mandatory(value);
+              },
             ),
-            controller: descriptionController,
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Valor R\$',
-              helperText:
-                  'Se for negativo é uma despesa, se for positivo é um recebimento',
-              hintText: '-155,00',
+            DropdownButtonFormField(
+              items: createDropdownMenu([
+                ' ',
+                'Contas',
+                'Gastos Pessoais',
+                'Salário',
+                'Transferência',
+                'Dívidas',
+                'Dividendos',
+                'JSCP'
+              ]),
+              hint: const Text('Tipo'),
+              onChanged: (value) {
+                operationTypeController.text = value.toString();
+              },
             ),
-            controller: quantityController,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            validator: (value) {
-              return mandatory(value);
-            },
-          ),
-          ElevatedButton(
-            child: const Text('Submit'),
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Processing Data')),
-                );
-                Map<String, String> dataToSend = {
-                  'place': operationPlaceController.text,
-                  'type': operationTypeController.text,
-                  'description': descriptionController.text,
-                  'quantity': quantityController.text,
-                };
-                String response = await sendToSheet(dataToSend);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(response),
-                    backgroundColor:
-                        response == 'Success!' ? Colors.green : Colors.red,
-                  ),
-                );
-              }
-            },
-          ),
-        ],
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Descrição',
+                hintText: 'Pasta de Amendoim',
+              ),
+              controller: descriptionController,
+            ),
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Valor R\$',
+                helperText:
+                    'Se for negativo é uma despesa, se for positivo é um recebimento',
+                hintText: '-155,00',
+              ),
+              controller: quantityController,
+              keyboardType: const TextInputType.numberWithOptions(
+                signed: true,
+                decimal: true,
+              ),
+              validator: (value) {
+                return mandatory(value);
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Submit'),
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Processing Data')),
+                  );
+                  Map<String, String> dataToSend = {
+                    'place': operationPlaceController.text,
+                    'type': operationTypeController.text,
+                    'description': descriptionController.text,
+                    'quantity': quantityController.text,
+                  };
+                  await sendToSheet(dataToSend);
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -154,13 +156,8 @@ List<DropdownMenuItem<Object>>? createDropdownMenu(List<String> options) {
       .toList();
 }
 
-Future<String> sendToSheet(Map<String, String> dataToSend) async {
-  HttpsCallable callable =
-      FirebaseFunctions.instance.httpsCallable('addToSheet');
-
-  final resp = await callable.call({
+Future<void> sendToSheet(Map<String, String> dataToSend) async {
+  await FirebaseFunctions.instance.httpsCallable('addToSheet').call({
     'text': dataToSend,
   });
-
-  return resp.data as String;
 }
