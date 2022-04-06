@@ -1,4 +1,4 @@
-A simple app with which I can update a personal finance google sheets from my Android phone.
+A simple app with which I can update a personal finance google sheets on my Google Drive from my Android phone.
 
 Useful stuff that I know I will forget if I don't write it down:
 
