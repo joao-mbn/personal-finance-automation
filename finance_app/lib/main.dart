@@ -68,7 +68,8 @@ class EEFormState extends State<EEForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             DropdownButtonFormField(
-              items: createDropdownMenu(['Ações', 'CDB', 'Inter', 'BB']),
+              items: createDropdownMenu(
+                  ['Espécie', 'Ações', 'CDB', 'Inter', 'BB']),
               hint: const Text('Lugar'),
               onChanged: (value) {
                 operationPlaceController.text = value.toString();
