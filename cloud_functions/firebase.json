@@ -1,3 +1,8 @@
 {
-  "functions": {}
+  "functions": {},
+  "emulators": {
+    "functions": {
+      "port": 5001
+    }
+  }
 }

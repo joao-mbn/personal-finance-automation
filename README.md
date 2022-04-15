@@ -23,6 +23,7 @@ Useful stuff that I know I will forget if I don't write it down:
             ]
             '''
             - 9229 is the standard port for the emulator.
+            - For some unknown reason, the App doesn't find the cloud function when it is emulated using node 17.9.0 but it does in node 12.22.1.
 
     - Flutter
         - Select device on bottom right (configurable in Android Studio)
@@ -37,3 +38,8 @@ Useful stuff that I know I will forget if I don't write it down:
 - Build apk to Distribute app
     - run 'flutter build apk'
     - get the apk file on the place suggested on cmd and paste it on Firebase app distribution
+
+- According to OAuth docs, the refreshing token might get expired.
+    - In that case, deleting the token.json file and generating a run new one is necessary. To do so run 'index.py' file.
+    - [Reference](https://developers.google.com/identity/protocols/oauth2#expiration)
+    - To circumvent this, i'm switching the Auth method to JWT using a service account and leaving this branch with OAuth method as legacy and reference.
