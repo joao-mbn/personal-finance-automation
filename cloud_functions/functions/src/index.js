@@ -13,8 +13,9 @@ exports.addToSheet = functions.https.onCall((data, context) => {
     return authorize(data.text, updateSheetService.addToSheet);
 });
 
-exports.createSheet = functions.https.onCall((data, context) => {
-    console.log('Not ready yet!');
+exports.createSheet = functions.pubsub.schedule('1 0 1 * *').timeZone('America/Sao_Paulo').onRun((context) => {
+    data = { text: { place: 'Inter', type: '', description: '', quantity: 100 } };
+    return authorize(data.text, updateSheetService.addToSheet);
 });
 
 function authorize(data, callback) {
