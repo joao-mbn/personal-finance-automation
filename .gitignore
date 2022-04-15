@@ -1,4 +1,6 @@
 .vscode
 credentials.json
 token.json
+service_secret.json
 google-services.json
+.env
