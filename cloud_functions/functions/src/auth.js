@@ -1,12 +1,12 @@
 const { google } = require('googleapis');
 const fs = require('fs');
+const { SPREADSHEET_ID } = require('../constants');
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 
 exports.updateSheet = async function (data, callback) {
-    //const auth = await google.auth.getClient({ scopes: SCOPES });
 
-    fs.readFile('./service_secret.json', (err, keys) => {
+    fs.readFile('./keys.json', (err, keys) => {
         if (err) return console.log('Error loading client secret file:', err);
         authorize(JSON.parse(keys), callback, data);
     });
@@ -35,7 +35,7 @@ async function appendToSheet(auth, data) {
     }
 
     sheets.spreadsheets.values.append({
-        spreadsheetId: process.env.SPREADSHEET_ID,
+        spreadsheetId: SPREADSHEET_ID,
         range: range,
         valueInputOption: 'USER_ENTERED',
         requestBody: body,

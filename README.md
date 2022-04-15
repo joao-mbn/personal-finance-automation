@@ -43,8 +43,6 @@ Useful stuff that I know I will forget if I don't write it down:
     - In that case, deleting the token.json file and generating a run new one is necessary. To do so run 'index.py' file.
     - [Reference](https://developers.google.com/identity/protocols/oauth2#expiration)
 
-
-- To test
-    - env.local to .env
-    - se o path do env está ok
-    - se o link da planilha deve ser feito público primeiro
+- Authentication with JWT can be done getting a new key with:
+    - Creating a new key for 'App Engine default service account'.
+    - Moving the json to functions folder under the name 'keys.json'
