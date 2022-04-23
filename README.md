@@ -30,7 +30,8 @@ Useful stuff that I know I will forget if I don't write it down:
                 ]
                 ~~~
                 - 9229 is the standard port for the emulator.
-            - For some unknown reason, the App doesn't find the cloud function when it is emulated using node 17.9.0 but it does in node 12.22.1.
+            - For some unknown reason, the App doesn't find the cloud function when it is emulated using node 17.9.0 but it does in
+            node 12.22.1 or 16.14.2.
 
         - to debug pubsub (simulate functions called by time triggers):
             - on a JavaScript Debug Terminal run:
